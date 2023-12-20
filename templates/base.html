@@ -1,0 +1,174 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    {% load bootstrap5 %}
+    {% bootstrap_css %}
+    {% bootstrap_javascript %}
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.js"></script>
+    {% load bootstrap_icons %}
+
+    {% block sidebar %}
+    <nav class="navbar navbar-expand-lg navbar-light" style="background-color: #fcfeff">
+      <div class="container-fluid">
+
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarText" aria-controls="navbarText" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+          <ul class="navbar-nav mx-auto">
+              <li class="nav-item" style="padding-right:50px">
+                 <a class="navbar-brand mx-auto" href="{{request.META.HTTP_NAME}}/">
+                    <img src="{% static 'csf_logo.jpg' %}" alt="logo" height="150" width="450"/>
+                 </a>
+              </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+    <nav class="navbar navbar-expand-lg navbar-dark" style="background-color: #c32434;">
+      <div class="container-fluid justify-content-center">
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarText" aria-controls="navbarText" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+          <div class="navbar-nav me-auto">
+            <form class="d-flex" method="POST">
+              {% csrf_token %}
+              <input class="form-control me-2 autocomplete" id="search" name="search" type="search" placeholder="Search Products" aria-label="Search" style="width: 75%">
+              <button class="btn btn-light" type="submit">
+                <span>{% bs_icon 'search' %}</span>
+              </button>
+            </form>
+              <script>
+                  $( function() {
+                    var availableProd = [
+                        {% for choice in autocomplete_choices %}
+                            "{{choice.name}}",
+                        {% endfor %}
+                    ];
+                    $( "#search" ).autocomplete({
+                      source: availableProd
+                    });
+                  } );
+              </script>
+            <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.js"></script>
+            <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.16/jquery-ui.js"></script>
+            <link href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.16/themes/ui-lightness/jquery-ui.css"
+                  rel="stylesheet" type="text/css" />
+          </div>
+          <ul class="navbar-nav" style="font-size: larger; padding-right: 9rem;">
+            <li class="nav-item">
+              <a class="nav-link active" aria-current="page" href="{{request.META.HTTP_NAME}}/">Home</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link active" aria-current="page" href="/products">Products</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link active" aria-current="page" href="/faq">FAQ</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link active" aria-current="page" href="#footer">Legal</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link active" aria-current="page" href="#footer">Contact</a>
+            </li>
+          </ul>
+          <ul class="navbar-nav ms-auto" style="font-size: larger">
+            <li class="nav-item">
+              {% if num_quotes %}
+                <a href="/cart" class="btn btn-light">
+                  <span style="padding-right: 5px;">{% bs_icon 'cart' %}</span>
+                  View Cart
+                  <span style="padding-right: 5px;"></span>
+                  <span class="badge bg-dark">{{num_quotes}}</span>
+                </a>
+              {% else %}
+                <a href="/cart" class="btn btn-light">
+                  <span style="padding-right: 5px;">{% bs_icon 'cart' %}</span> View Cart
+                </a>
+              {% endif %}
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+
+    {% endblock %}
+
+      <title>Carolina Stainless Fabrication</title>
+
+  </head>
+  <body>
+    <link rel="stylesheet" type="text/css" href="{% static 'css/homepage.css' %}"/>
+
+    {% block content %}
+      <!-- default content text (typically empty) -->
+    {% endblock %}
+  </body>
+
+<!-- Footer -->
+<footer id="footer" class="text-center text-lg-start text-muted">
+
+  <section class="">
+    <div class="text-center" style="background-color: #212529; padding-top: 20px;">
+      <!-- Grid row -->
+      <div class="row mt-3">
+        <!-- Grid column -->
+        <div class="col-md-3 col-lg-4 col-xl-3 mx-auto mb-4">
+          <!-- Content -->
+          <h6 class="text-uppercase fw-bold mb-4">
+            <i class="fas fa-gem me-3"></i>About Our Steel
+          </h6>
+          <p>
+            At Carolina Stainless Fabrication, we use AISI 304 Stainless Steel with a No. 4 finish due to its
+            ideal properties fit for the food and beverage industry. AISI 304 is a steel alloy that has
+            tremendous resistance to corrosion and rust due to an oxide layer created by high chromium
+            (18%) and nickel (8%) content. This metal composition is non-reactive with a non-porous surface,
+            meaning it prevents the material from transmitting any color, odor, or taste to products it
+            encounters. Aside from having high temperature tolerance and durability, ASIS 304 follows
+            regulatory standards and requirements needed for food contact materials (FDA and NSF
+            International).
+          </p>
+        </div>
+
+        <!-- Grid column -->
+        <div class="col-md-3 col-lg-2 col-xl-2 mx-auto mb-4">
+          <!-- Links -->
+          <h6 class="text-uppercase fw-bold mb-4">
+            Legal
+          </h6>
+          <p>
+            All of our products have been investigated by UL in accordance with the standards of:
+          </p>
+          <p>
+            NFPA 70 National Electrical Code Sections 392.60(A) and 392.60(B) NEMA VE1 METAL
+            CABLE AND TRAY SYSTEMS CSA C22.2 NO. 126.1-17 METAL CABLE TRAY SYSTEMS
+          </p>
+        </div>
+        <!-- Grid column -->
+
+        <!-- Grid column -->
+        <div class="col-md-4 col-lg-3 col-xl-3 mx-auto mb-md-0 mb-4">
+          <!-- Links -->
+          <h6 class="text-uppercase fw-bold mb-4">Contact</h6>
+          <p><i class="fas fa-home me-3"></i> 7073 W Highway 290 <br>Dripping Spring, Tx 78620 United States</p>
+          <p>
+            <i class="fas fa-envelope me-3"></i>
+            andrewbell@carolinastainlessfabrication.com
+          </p>
+          <p><i class="fas fa-phone me-3"></i> +1 (512) 621-4747</p>
+          <p><i class="fas fa-print me-3"></i> some other number</p>
+        </div>
+        <!-- Grid column -->
+      </div>
+      <!-- Grid row -->
+    </div>
+  </section>
+  <!-- Section: Links  -->
+
+</footer>
+<!-- Footer -->
+</html>

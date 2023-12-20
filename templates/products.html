@@ -1,0 +1,144 @@
+{% extends "base.html" %}
+
+{% block content %}
+    {%  load static %}
+    {% load csf_tags %}
+
+<div class="d-flex justify-content-center" style="margin-top: 50px; margin-bottom: 15rem;">
+
+{#            INTERFACE FOR PRODUCT ACCORDION              #}
+        <div class="col d-flex justify-content-center">
+            <div class="card" style="width: 25rem;">
+                <div class="card-header align-text-center"><h2>Product Ranges</h2></div>
+                <div class="accordion accordion-flush" id="accordionFlushExample">
+                {% for cat, subcats in categories.items %}
+                    {% with "flush-heading-"|add:cat as heading %}
+                    {% with "flush-collapse-"|add:cat as collapse %}
+                      <div class="accordion-item">
+                        <h2 class="accordion-header" id="{{heading|cut:' '}}">
+                        {% if selected_category == cat %}
+                          <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#{{collapse|cut:' '}}" aria-expanded="true" aria-controls="{{collapse|cut:' '}}">
+                          {% else %}
+                          <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#{{collapse|cut:' '}}" aria-expanded="false" aria-controls="{{collapse|cut:' '}}">
+                        {% endif %}
+                              <h5>{{ cat }}</h5>
+                          </button>
+                        </h2>
+                        {% if selected_category == cat %}
+                        <div id="{{collapse|cut:' '}}" class="accordion-collapse collapse show" aria-labelledby="{{heading|cut:' '}}" data-bs-parent="#accordionFlushExample">
+                        {% else %}
+                        <div id="{{collapse|cut:' '}}" class="accordion-collapse collapse" aria-labelledby="{{heading|cut:' '}}" data-bs-parent="#accordionFlushExample">
+                        {% endif %}
+                          <div class="accordion-body">
+                            <ul class="list-group btn-group d-flex">
+                              {% for subcat in subcats %}
+                                <li class="list-group-item bg-light" style="margin: 5px">
+                                    {% csrf_token %}
+                                  <a href="{{request.META.HTTP_NAME}}/products/{{subcat.name|fill_space:'_'}}" class="btn btn-dark w-100" style="background-color: #c32434;">{{subcat.name}}</a>
+                                </li>
+                              {% endfor %}
+                            </ul>
+                          </div>
+                        </div>
+                      </div>
+                    {% endwith %} {% endwith %}
+                {% endfor %}
+                </div>
+            </div>
+        </div>
+{#            Product Cards                #}
+        <div class="col">
+            <div class="row">
+                {% for product in products %}
+                <div class="card" style="width: 18rem; margin: 20px">
+                  <img src="{{ product.image.url }}" class="card-img-top" alt="item_image">
+                  <div class="card-body">
+                    <h5 class="card-title">{{ product.name }}</h5>
+                    <p class="card-text">{{ product.desc }}</p>
+                    <select class="form-select" aria-label="Default select example">
+                        <option selected>Sizes Available</option>
+                        {% for item in product.sizes|process_sizes %}
+                            <option value="{{ item }}">{{ item }}</option>
+                        {% endfor %}
+                    </select>
+                      <p style="padding-top: 20px">{{ product.description }}</p>
+                      <img src="{% static 'ul1.jpg' %}" height="30px", width="60px">
+                  </div>
+                    <div class="card-body">
+                        <div class="row d-flex justify-content-center">
+                            <div class="col d-flex justify-content-center">
+                                {% with "modal-"|add:product.htmlid as modalid %}
+                                <button type="button" class="btn btn-dark" data-bs-toggle="modal" data-bs-target="#{{modalid}}" data-pname="{{product.name}}" style="background-color: #c32434;">Add to Quote</button>
+                                {% endwith %}
+                            </div>
+                            <div class="col d-flex justify-content-center">
+                                <a href="{% url 'csf:download_file' product_id=product.id %}" type="button" class="btn btn-dark">Download Schematics</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% empty %}
+                <div class="card" style="width: 40rem; margin: 20px">
+                    <div class="card-body" style="text-align: center;">
+                        {% if selected_category == "none" %}
+                            <h4>Your search returned no results.</h4>
+                        {% else %}
+                            <h4 style="color: silver;">Select a Product Range to begin browsing products.</h4>
+                        {% endif %}
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+
+{#       QUOTE MODALS         #}
+    {% for product in products %}
+        {% with "modal-"|add:product.htmlid as modalid %}
+        {% with "modal-label"|add:product.htmlid as modalabel %}
+    <div class="modal fade" id="{{modalid}}" tabindex="-1" aria-labelledby="{{modalabel}}" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+      <form action="" method="post">
+      {% csrf_token %}
+        <div class="modal-header">
+          <h5 class="modal-title" id="{{modalabel}}">Add {{product.name}} to quote:</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body d-flex justify-content-center" value="">
+            <div class="col justify-content-center">
+                <div class="row justify-content-center">
+                    <span class="btn btn-dark" style="width: 8rem;">Select Size</span>
+                </div>
+                <div class="row" style="padding-top: 5px;"></div>
+                <div class="row justify-content-center">
+                    <span class="btn btn-dark" style="width: 8rem;">Enter Quantity</span>
+                </div>
+            </div>
+            <div class="col justify-content-center">
+                <div class="row justify-content-start">
+                    <select name="size" class="form-select" aria-label="Default select example"  style="width: 10rem;">
+                        <option selected>Sizes Available</option>
+                        {% for item in product.sizes|process_sizes %}
+                            <option value="{{ item }}">{{ item }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="row" style="padding-top: 5px;"></div>
+                <div class="row justify-content-start">
+                    <input name="quant" min="0" max="1000" type="number" class="form-control" value="1" style="width: 5rem">
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <input type="hidden" name="product_id" value="{{product.id}}"></input>
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+          <button type="submit" class="btn btn-dark" style="background-color: #c32434;">Add</button>
+        </div>
+      </form>
+      </div>
+    </div>
+  </div>
+        {% endwith %} {% endwith %}
+    {% endfor %}
+{% endblock %}

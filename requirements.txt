@@ -1,0 +1,6 @@
+Django==4.2.3
+django-mysql==4.11.0
+Pillow==10.0.0
+django-bootstrap-icons==0.8.6
+django-crispy-forms==2.1
+crispy-bootstrap5==2023.1

@@ -1,0 +1,25 @@
+{% load static %}
+
+#main_image {
+    background-image: url('../bottles_1.jpg');
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    background-size: cover;
+    width: 100%;
+    height: 800px;
+    max-width: 1920px;
+}
+#text_backdrop {
+    background-image: url("../text_backdrop.jpg");
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    background-size: cover;
+    width: 100%;
+    height: 600px;
+    max-width: 1920px;
+}
+#product-image{
+    box-shadow: rgba(149, 157, 165, 0.2) 0 8px 24px;
+    width: 100%;
+    border-radius: 15px;
+}

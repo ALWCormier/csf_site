@@ -1,0 +1,101 @@
+{% extends "base.html" %}
+
+{% block content %}
+    {% load static %}
+    {% load csf_tags %}
+    {% load bootstrap_icons %}
+    {% load crispy_forms_tags %}
+
+    {% if form %}
+        <script type="text/javascript">
+            $(window).on('load', function() {
+                $('#contact_modal').modal('show');
+            });
+        </script>
+    {% endif %}
+
+    <div class="d-flex justify-content-center" style="margin-top: 50px; margin-bottom: 15rem;">
+        {% if quote_items %}
+            <div class="card">
+              <div class="card-body d-flex justify-content-center">
+                <form action="" method="POST">
+                {% csrf_token %}
+                    <div class="row d-flex " style="width: 35rem; padding-bottom: 1rem;">
+                        <div class="col justify-content-center"></div>
+                      <div class="col justify-content-center"></div>
+                      <div class="col justify-content-center">Size</div>
+                      <div class="col justify-content-center">Quantity</div>
+                      <div class="col justify-content-center">Remove</div>
+                    </div>
+                  {% for item in quote_items%}
+                    <div class="row d-flex " style="width: 35rem; padding-bottom: 1rem;">
+                        <div class="col ms-auto">
+                            <img src="{{item|getimage}}" class="img-thumbnail">
+                        </div>
+                        <br>
+                        <div class="col justify-content-center">{{item|getname}}</div>
+                        <div class="col justify-content-center">
+                            <select name="{{item|makename:'size'}}" class="form-select" aria-label="Default select example" style="padding-left: 10px; padding-right: 10px;">
+                                <option selected>{{item|size}}</option>
+                                {% for size in item|getsizes %}
+                                    <option value="{{ size }}">{{ size }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="col justify-content-center">
+                            <input name="{{item|makename:'quantity'}}" min="0" max="1000" type="number" id="typeNumber" class="form-control" value="{{item|quantity}}" style="width: 5rem">
+                        </div>
+                        <div class="col justify-content-center">
+                            <a href="{{request.META.HTTP_NAME}}/cart/{{item|getid}}"><span style="padding-left: 30%;" >{% bs_icon 'x' color='red'%}</span></a>
+                        </div>
+                    </div>
+                  {% endfor %}
+                    <div class="row">
+                        <div class="card-footer d-flex justify-content-between">
+                    <a href="products" class="btn btn-dark"><span style="padding-right: 5px;">{% bs_icon 'arrow-left' %}</span>Products</a>
+                    <button type="submit" class="btn btn-dark" style="background-color: #c32434;"><span style="padding-right: 5px;">{% bs_icon 'envelope' %}</span>Get Quote</button>
+                </div>
+                    </div>
+                </form>
+              </div>
+            </div>
+        {% else %}
+            <div class="card" style="width: 40rem; margin: 20px">
+                <div class="card-header d-flex justify-content-center">
+                    <h5 class="card-title">No Items in Cart</h5>
+                </div>
+                <div class="card-body d-flex justify-content-center">
+                    <p style="text-align: center;">It looks like you don't have anything in your cart yet. To add items to your cart and get a quote from us, please visit the product page.</p>
+                </div>
+                <div class="card-footer d-flex justify-content-center">
+                  <a href="/products" class="btn btn-secondary">View Products</a>
+                </div>
+            </div>
+        {% endif %}
+
+        <!-- Modal -->
+        <div class="modal fade" id="contact_modal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="contact_modal_label" aria-hidden="true">
+          <div class="modal-dialog">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h1 class="modal-title fs-5" id="contact_modal_label">Get Quote</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+              </div>
+              <div class="modal-body">
+                  <p>To receive a quote for the items in your cart, please enter your information and you will be contact shortly.</p>
+                <form action="/sent" method="POST">
+                    {% csrf_token %}
+                    {{ form|crispy }}
+                    <div class="d-flex justify-content-end">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <div style="padding-left: 1rem;"></div>
+                        <button type="submit" class="btn btn-dark" style="background-color: #c32434;">Send</button>
+                    </div>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+
+    </div>
+{% endblock %}
