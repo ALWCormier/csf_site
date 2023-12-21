@@ -4,3 +4,4 @@ Pillow==10.0.0
 django-bootstrap-icons==0.8.6
 django-crispy-forms==2.1
 crispy-bootstrap5==2023.1
+django-bootstrap-v5==1.0.11
