@@ -21,12 +21,12 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-x)wkfiup$rd!1fqgg!&uf!e6&01b=zf+jxhrg^m&(0$7efxnrv'
+SECRET_KEY = os.environ["django-secret"]
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['127.0.0.1']
+ALLOWED_HOSTS = ["carolinastainlessfabrication.com"]
 
 
 # Application definition
@@ -89,9 +89,9 @@ EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_USE_TLS = True
 EMAIL_PORT = 587
 EMAIL_USE_SSL = False
-EMAIL_HOST_USER = 'csf.autoresponse@gmail.com'
-EMAIL_HOST_PASSWORD = 'jxff ebgl hscn tomz'
-RECIPIENT_ADDRESS = 'sales@carolinastainlessfabrication.com'
+EMAIL_HOST_USER = '####'
+EMAIL_HOST_PASSWORD = '####'
+RECIPIENT_ADDRESS = '####'
 
 
 # Database
@@ -139,7 +139,7 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
 
-BASE_URL = '127.0.0.1:8000'
+BASE_URL = 'carolinastainlessfabrication.com'
 STATIC_URL = 'static/'
 MEDIA_URL = 'media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'csf/media/')
